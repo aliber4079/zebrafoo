@@ -3,14 +3,14 @@ import SymptomBox from './symptombox.jsx';
 
 export default function SymptomsHolder ({dragDrop, id, holder}) {
 	let content=[]
+	holder=holder.filter(i=>i.container==id)
 	for (let i=0; i<holder.length;i++){
 	  content.push(<SymptomBox hits={holder[i]} />)
 	}
 	return (
 	<div id={id} className={styles.symptomsholder} 
 		 onDragOver={e=>{
-		   var boxid=e.dataTransfer.getData('text/plain')
-		   if (1!=e.currentTarget.id) {
+		   if (e.target.parentElement.id!=e.currentTarget.id) {
 		     e.preventDefault()
 		   }
 		}

@@ -7,6 +7,7 @@ export default function HomePage() {
   	const [searchResponse, setSearchResponse] = useState(false)
 	const [proposedHolder,setProposedHolder]=useState([])
 	const [selectedHolder,setSelectedHolder]=useState([])
+	const [symptomsHolder,setSymptomsHolder]=useState([])
 	function beginSearch(searchText) {
 		console.log("beginning search")
     		setLoading(true)
@@ -28,37 +29,36 @@ export default function HomePage() {
       		 })
       		 .then((res) => res.json())
       		 .then((data) => {
-			setProposedHolder(data.hits.hits.map(i=>i._source))
+			//use splice to remove existing
+			let data1=data.hits.hits.map(i=>i._source).filter(i=>!symptomsHolder.find(i=>i.id))
+			setSymptomsHolder(data1.map(i=> { return { ...i, ...{"container":"proposed"} } }));
         		setLoading(false)
-      		 })
+      		})
         	if (isLoading) return <p>Loading...</p>
-        	if (!proposedHolder) return <p>No data</p>
+        	if (!symptomsHolder) return <p>No data</p>
 	}
 	return(
 		<>
 		<QueryBox beginSearch={beginSearch}/>
-	    	<SymptomsHolder id="proposed" dragDrop={dragDrop} holder={proposedHolder}  />
+	    	<SymptomsHolder id="proposed" dragDrop={dragDrop} holder={symptomsHolder}  />
 	    	<div style={{height:'20px', clear:'both' }} />
-	    	<SymptomsHolder id="selected" dragDrop={dragDrop} holder={selectedHolder} />
+	    	<SymptomsHolder id="selected" dragDrop={dragDrop} holder={symptomsHolder} />
 		</>
 	)
 	function dragDrop(e) {
 		var boxid=e.dataTransfer.getData("text/plain")
-		let src=document.getElementById(boxid).parentElement.id
-		//(proposedHolder.find( i => i.id==boxid )!=null ? "proposed" : "selected" )
+		let boxinfo=symptomsHolder.find( i => i.id===boxid)
+		let src=boxinfo.container//document.getElementById(boxid).parentElement.id
 		let target=e.currentTarget.id
 		if (src!=target) {
 		 e.preventDefault()
-		 let srcHolder=eval(src+"Holder")
-		 let srcholderclone = srcHolder.map (x => x) //clone
-		 let targetHolder=eval(target + "Holder")
-		 let targetholderclone=targetHolder.map ( x => x ) //clone
-		 let boxinfo=srcHolder.find( i => i.id===boxid)
-		 targetholderclone.push(boxinfo)
-		 let boxinfoindexinsrc=srcholderclone.findIndex(i=>i.id==boxid)
-		 srcholderclone.splice(boxinfoindexinsrc,1) //remove from source
-		 eval(`set${src[0].toUpperCase()+src.slice(1)}Holder(srcholderclone)`) //add
-		 eval(`set${target[0].toUpperCase()+target.slice(1)}Holder(targetholderclone)`) 
+		 let holderclone = symptomsHolder.map (x => {
+		  if(x.id==boxid) {
+		   x.container=target
+		  }
+		  return x
+		 }) //clone
+		 setSymptomsHolder(holderclone)
 	        }
 	}
 }

@@ -6,6 +6,7 @@ export default function SymptomBox({hits}) {
 			<div id={hits.id} className={styles.container} draggable droppable={true}  onDragStart={e => {
 	e.dataTransfer.effectAllowed = "move";
 	e.dataTransfer.setData("text/plain", hits.id)
+				console.log("setdata",hits.id)
 			}}>
 			<div name="symptomlabel" className={styles.symptomlabel} >
 				{hits.lbl}
