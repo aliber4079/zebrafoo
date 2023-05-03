@@ -30,8 +30,14 @@ export default function HomePage() {
       		 .then((res) => res.json())
       		 .then((data) => {
 			//use splice to remove existing
-			let data1=data.hits.hits.map(i=>i._source).filter(i=>!symptomsHolder.find(i=>i.id))
-			setSymptomsHolder(data1.map(i=> { return { ...i, ...{"container":"proposed"} } }));
+			let searched_words=[...data.hits.hits.map(i=>i._source)]
+			//searched words will always start in the proposed box
+			searched_words=searched_words.map(i=>{
+				return{...i, ...{"container":"proposed"} }
+			})
+			let searched_words_filtered=([...symptomsHolder.filter(i=>!searched_words.find(j=>i.id==j.id)),...searched_words])
+			searched_words_filtered=([...searched_words.filter(i=>!symptomsHolder.find(j=>i.id==j.id)),...symptomsHolder])
+			setSymptomsHolder(searched_words_filtered)
         		setLoading(false)
       		})
         	if (isLoading) return <p>Loading...</p>
