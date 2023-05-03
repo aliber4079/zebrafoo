@@ -1,9 +1,12 @@
 import {useState, useEffect} from 'react'
 import QueryBox from '../components/querybox.jsx'
+import SymptomsHolder from '../components/symptomsholder.jsx'
 
 export default function HomePage() {
   	const [isLoading, setLoading] = useState(false)
   	const [searchResponse, setSearchResponse] = useState(false)
+	const [proposedHolder,setProposedHolder]=useState([])
+	const [selectedHolder,setSelectedHolder]=useState([])
 	function beginSearch(searchText) {
 		console.log("beginning search")
     		setLoading(true)
@@ -25,16 +28,41 @@ export default function HomePage() {
       		 })
       		 .then((res) => res.json())
       		 .then((data) => {
-			let synonyms=data.hits.hits[0]._source?.synonyms
-			setSearchResponse(synonyms)
+			setProposedHolder(data.hits.hits.map(i=>i._source))
         		setLoading(false)
       		 })
         	if (isLoading) return <p>Loading...</p>
-        	if (!searchResponse) return <p>No data</p>
+        	if (!proposedHolder) return <p>No data</p>
 	}
 	return(
 		<>
 		<QueryBox beginSearch={beginSearch}/>
+	    	<SymptomsHolder id="proposed" dragDrop={dragDrop} holder={proposedHolder}  />
+	    	<div style={{height:'20px', clear:'both' }} />
+	    	<SymptomsHolder id="selected" dragDrop={dragDrop} holder={selectedHolder} />
 		</>
 	)
+	function dragDrop(e) {
+		var boxid=e.dataTransfer.getData("text/plain")
+		let src=(proposedHolder.find( i => i.id==boxid )!=null ? "proposed" : "selected" )
+		let target=e.currentTarget.id
+		if (src!=target) {
+		 e.preventDefault()
+		 let srcHolder=(src=="proposed" ? proposedHolder : selectedHolder)
+		 let srcholderclone = srcHolder.map (x => x) //clone
+		 let targetHolder=(src=="proposed" ? selectedHolder : proposedHolder)
+		 let targetholderclone=targetHolder.map ( x => x ) //clone
+		 let boxinfo=srcHolder.find( i => i.id===boxid)
+		 targetholderclone.push(boxinfo)
+		 let boxinfoindexinsrc=srcholderclone.findIndex(i=>i.id==boxid)
+		 srcholderclone.splice(boxinfoindexinsrc,1) //remove from source
+		 if (target=="proposed") {
+		  setProposedHolder(targetholderclone) //add
+		  setSelectedHolder (srcholderclone) 
+		 } else { //target is selected
+		  setSelectedHolder(targetholderclone)
+		  setProposedHolder(srcholderclone)
+		 }
+	        }
+	}
 }
