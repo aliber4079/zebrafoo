@@ -44,25 +44,21 @@ export default function HomePage() {
 	)
 	function dragDrop(e) {
 		var boxid=e.dataTransfer.getData("text/plain")
-		let src=(proposedHolder.find( i => i.id==boxid )!=null ? "proposed" : "selected" )
+		let src=document.getElementById(boxid).parentElement.id
+		//(proposedHolder.find( i => i.id==boxid )!=null ? "proposed" : "selected" )
 		let target=e.currentTarget.id
 		if (src!=target) {
 		 e.preventDefault()
-		 let srcHolder=(src=="proposed" ? proposedHolder : selectedHolder)
+		 let srcHolder=eval(src+"Holder")
 		 let srcholderclone = srcHolder.map (x => x) //clone
-		 let targetHolder=(src=="proposed" ? selectedHolder : proposedHolder)
+		 let targetHolder=eval(target + "Holder")
 		 let targetholderclone=targetHolder.map ( x => x ) //clone
 		 let boxinfo=srcHolder.find( i => i.id===boxid)
 		 targetholderclone.push(boxinfo)
 		 let boxinfoindexinsrc=srcholderclone.findIndex(i=>i.id==boxid)
 		 srcholderclone.splice(boxinfoindexinsrc,1) //remove from source
-		 if (target=="proposed") {
-		  setProposedHolder(targetholderclone) //add
-		  setSelectedHolder (srcholderclone) 
-		 } else { //target is selected
-		  setSelectedHolder(targetholderclone)
-		  setProposedHolder(srcholderclone)
-		 }
+		 eval(`set${src[0].toUpperCase()+src.slice(1)}Holder(srcholderclone)`) //add
+		 eval(`set${target[0].toUpperCase()+target.slice(1)}Holder(targetholderclone)`) 
 	        }
 	}
 }

@@ -15,4 +15,7 @@ export default function SymptomBox({hits}) {
 			</div>
 			</div>
 		)
+	function getParentId() {
+	 console.log("getparentid")
+	}
 }
