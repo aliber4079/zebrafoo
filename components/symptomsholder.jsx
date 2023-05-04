@@ -3,9 +3,9 @@ import SymptomBox from './symptombox.jsx';
 
 export default function SymptomsHolder ({dragDrop, id, symptomsHolder,setSymptomsHolder, title}) {
 	let content=[]
-	symptomsHolder=symptomsHolder.filter(i=>i.container==id)
-	for (let i=0; i<symptomsHolder.length;i++){
-	  content.push(<SymptomBox hits={symptomsHolder[i]} deleteMe={deleteMe} />)
+	let tmpHolder=symptomsHolder.filter(i=>i.container==id)
+	for (let i=0; i<tmpHolder.length;i++){
+	  content.push(<SymptomBox hits={tmpHolder[i]} deleteMe={deleteMe} />)
 	}
 	return (
 		<div style={{"float":"left"}}>
