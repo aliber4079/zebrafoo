@@ -3,14 +3,13 @@ import QueryBox from '../components/querybox.jsx'
 import SymptomsHolder from '../components/symptomsholder.jsx'
 
 export default function HomePage() {
-  	const [isLoading, setLoading] = useState(false)
+  	const [queryStatus, setQueryStatus] = useState("OK")
   	const [searchResponse, setSearchResponse] = useState(false)
 	const [proposedHolder,setProposedHolder]=useState([])
 	const [selectedHolder,setSelectedHolder]=useState([])
 	const [symptomsHolder,setSymptomsHolder]=useState([])
 	function beginSearch(searchText) {
 		console.log("beginning search")
-    		setLoading(true)
     		fetch('/api/elastic',{
 	    		headers: {"Content-Type": "application/json"},
 	    		method: "POST",
@@ -29,26 +28,32 @@ export default function HomePage() {
       		 })
       		 .then((res) => res.json())
       		 .then((data) => {
-			//use splice to remove existing
+			if (data.hits.hits.length==0) {
+			 setQueryStatus("no results")
+			 return
+			}
 			let searched_words=[...data.hits.hits.map(i=>i._source)]
 			//searched words will always start in the proposed box
 			searched_words=searched_words.map(i=>{
 				return{...i, ...{"container":"proposed"} }
 			})
-			let searched_words_filtered=([...symptomsHolder.filter(i=>!searched_words.find(j=>i.id==j.id)),...searched_words])
-			searched_words_filtered=([...searched_words.filter(i=>!symptomsHolder.find(j=>i.id==j.id)),...symptomsHolder])
-			setSymptomsHolder(searched_words_filtered)
-        		setLoading(false)
+			let searched_words_filtered=searched_words.filter(i=>!symptomsHolder.find(j=>i.id==j.id))
+			setQueryStatus(searched_words_filtered.length + " result(s)")
+			//clear out old proposed symptoms
+			let tmpHolder=(symptomsHolder.filter(i=>i.container!=="proposed"))
+			tmpHolder=[...searched_words_filtered,...tmpHolder]
+			setSymptomsHolder(tmpHolder)
+
       		})
-        	if (isLoading) return <p>Loading...</p>
-        	if (!symptomsHolder) return <p>No data</p>
 	}
 	return(
 		<>
-		<QueryBox beginSearch={beginSearch}/>
+		<QueryBox beginSearch={beginSearch} queryStatus={queryStatus}/>
 	    	<SymptomsHolder id="proposed" dragDrop={dragDrop} holder={symptomsHolder}  />
 	    	<div style={{height:'20px', clear:'both' }} />
-	    	<SymptomsHolder id="selected" dragDrop={dragDrop} holder={symptomsHolder} />
+	    	<SymptomsHolder id="symptoms_must_not" dragDrop={dragDrop} holder={symptomsHolder} />
+	    	<SymptomsHolder id="symptoms_should" dragDrop={dragDrop} holder={symptomsHolder} />
+	    	<SymptomsHolder id="symptoms_must" dragDrop={dragDrop} holder={symptomsHolder} />
 		</>
 	)
 	function dragDrop(e) {

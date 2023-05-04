@@ -1,5 +1,5 @@
 
-export default function QueryBox({beginSearch}) {
+export default function QueryBox({beginSearch, queryStatus}) {
 	var timerno=0
 	function startTimer() {
 	  return setTimeout(()=>{
@@ -27,7 +27,9 @@ export default function QueryBox({beginSearch}) {
 	 }
 	}
 	return (
+		<>
 		<input id="queryinput" type="text" onKeyPress={timerstuff} />
-
+		<p>status: {queryStatus}</p>
+		</>
 	)
 }
