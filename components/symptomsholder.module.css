@@ -1,6 +1,9 @@
 .symptomsholder {
-	clear: both;
+	float: left;
 	height: 200px;
-	width: 1500px;
+	width: 400px;
+	margin: 5px;
 	border: solid thin black;
+	overflow: auto;
 }
+

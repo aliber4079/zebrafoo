@@ -9,7 +9,7 @@ export default function HomePage() {
 	const [selectedHolder,setSelectedHolder]=useState([])
 	const [symptomsHolder,setSymptomsHolder]=useState([])
 	function beginSearch(searchText) {
-		console.log("beginning search")
+		setQueryStatus("Searching...")
     		fetch('/api/elastic',{
 	    		headers: {"Content-Type": "application/json"},
 	    		method: "POST",
@@ -49,11 +49,10 @@ export default function HomePage() {
 	return(
 		<>
 		<QueryBox beginSearch={beginSearch} queryStatus={queryStatus}/>
-	    	<SymptomsHolder id="proposed" dragDrop={dragDrop} holder={symptomsHolder}  />
-	    	<div style={{height:'20px', clear:'both' }} />
-	    	<SymptomsHolder id="symptoms_must_not" dragDrop={dragDrop} holder={symptomsHolder} />
-	    	<SymptomsHolder id="symptoms_should" dragDrop={dragDrop} holder={symptomsHolder} />
-	    	<SymptomsHolder id="symptoms_must" dragDrop={dragDrop} holder={symptomsHolder} />
+	    	<SymptomsHolder title="results of symptom search" id="proposed" dragDrop={dragDrop} holder={symptomsHolder}  />
+	    	<SymptomsHolder title="symptoms must not match" id="symptoms_must_not" dragDrop={dragDrop} holder={symptomsHolder} />
+	    	<SymptomsHolder title="symptoms should match" id="symptoms_should" dragDrop={dragDrop} holder={symptomsHolder} />
+	    	<SymptomsHolder title="symptoms must match" id="symptoms_must" dragDrop={dragDrop} holder={symptomsHolder} />
 		</>
 	)
 	function dragDrop(e) {
