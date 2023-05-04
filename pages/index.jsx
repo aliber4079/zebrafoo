@@ -49,10 +49,10 @@ export default function HomePage() {
 	return(
 		<>
 		<QueryBox beginSearch={beginSearch} queryStatus={queryStatus}/>
-	    	<SymptomsHolder title="results of symptom search" id="proposed" dragDrop={dragDrop} holder={symptomsHolder}  />
-	    	<SymptomsHolder title="symptoms must not match" id="symptoms_must_not" dragDrop={dragDrop} holder={symptomsHolder} />
-	    	<SymptomsHolder title="symptoms should match" id="symptoms_should" dragDrop={dragDrop} holder={symptomsHolder} />
-	    	<SymptomsHolder title="symptoms must match" id="symptoms_must" dragDrop={dragDrop} holder={symptomsHolder} />
+	    	<SymptomsHolder title="results of symptom search" id="proposed" dragDrop={dragDrop} symptomsHolder={symptomsHolder} setSymptomsHolder={setSymptomsHolder} />
+	    	<SymptomsHolder title="symptoms must not match" id="symptoms_must_not" dragDrop={dragDrop} symptomsHolder={symptomsHolder} setSymptomsHolder={setSymptomsHolder} />
+	    	<SymptomsHolder title="symptoms should match" id="symptoms_should" dragDrop={dragDrop} symptomsHolder={symptomsHolder} setSymptomsHolder={setSymptomsHolder} />
+	    	<SymptomsHolder title="symptoms must match" id="symptoms_must" dragDrop={dragDrop} symptomsHolder={symptomsHolder} setSymptomsHolder={setSymptomsHolder} />
 		</>
 	)
 	function dragDrop(e) {

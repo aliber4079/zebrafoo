@@ -1,11 +1,11 @@
 import styles from './symptomsholder.module.css';
 import SymptomBox from './symptombox.jsx';
 
-export default function SymptomsHolder ({dragDrop, id, holder, title}) {
+export default function SymptomsHolder ({dragDrop, id, symptomsHolder,setSymptomsHolder, title}) {
 	let content=[]
-	holder=holder.filter(i=>i.container==id)
-	for (let i=0; i<holder.length;i++){
-	  content.push(<SymptomBox hits={holder[i]} />)
+	symptomsHolder=symptomsHolder.filter(i=>i.container==id)
+	for (let i=0; i<symptomsHolder.length;i++){
+	  content.push(<SymptomBox hits={symptomsHolder[i]} deleteMe={deleteMe} />)
 	}
 	return (
 		<div style={{"float":"left"}}>
@@ -21,4 +21,10 @@ export default function SymptomsHolder ({dragDrop, id, holder, title}) {
 	</div>
 		</div>
 	)
+	function deleteMe(id) {
+		let tmpholder=[...symptomsHolder]
+		tmpholder=tmpholder.filter(i=>i.id!=id)
+		setSymptomsHolder(tmpholder)
+		console.log("delete " + id, tmpholder)
+	}
 }
