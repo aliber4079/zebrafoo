@@ -1,0 +1,9 @@
+.differential {
+	float: left;
+	height: 300px;
+	width: 500px;
+	margin: 5px;
+	border: solid thin black;
+	overflow: auto;
+}
+
