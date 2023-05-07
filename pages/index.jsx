@@ -9,7 +9,6 @@ export default function HomePage() {
 	const [proposedHolder,setProposedHolder]=useState([])
 	const [selectedHolder,setSelectedHolder]=useState([])
 	const [symptomsHolder,setSymptomsHolder]=useState([])
-	const [diffData,setDiffData]=useState([])
 	function beginSearch(searchText) {
 		setQueryStatus("Searching...")
     		fetch('/api/elastic',{
@@ -55,7 +54,7 @@ export default function HomePage() {
 	    	<SymptomsHolder title="symptoms must not match" id="symptoms_must_not" dragDrop={dragDrop} symptomsHolder={symptomsHolder} setSymptomsHolder={setSymptomsHolder} />
 	    	<SymptomsHolder title="symptoms should match" id="symptoms_should" dragDrop={dragDrop} symptomsHolder={symptomsHolder} setSymptomsHolder={setSymptomsHolder} />
 	    	<SymptomsHolder title="symptoms must match" id="symptoms_must" dragDrop={dragDrop} symptomsHolder={symptomsHolder} setSymptomsHolder={setSymptomsHolder} />
-		<Differential title="differential" diffData={diffData} />
+		<Differential title="differential" symptomsHolder={symptomsHolder} />
 		</>
 	)
 	function dragDrop(e) {
@@ -73,37 +72,6 @@ export default function HomePage() {
 		 }) //clone
 		 setSymptomsHolder(holderclone)
 		 //differential?
-		 console.log("symptom to search for is ", boxinfo.id )
-		 let subqueries={}
-		 let classifications=["must","must_not","should"]
-		 for (let i in classifications) {
-		  let classif=classifications[i]
-		  let bucket=holderclone.filter(k=>k.container=="symptoms_"+classif)
-		  subqueries[classif]=bucket
-		 }
-		 console.log(JSON.stringify(subqueries))
-		 let query={"query":{
-			 "bool": {
-			 	"must":{
-				"match": {	
-	  					"HPODisorderSetStatus.Disorder.HPODisorderAssociationList.HPODisorderAssociation.HPO.HPOId": boxinfo.id.replace("_",":")
-				}
-				}
-		 	}
-		   }
-		 }
-		 console.log("query: ", JSON.stringify(query))
-		 fetch('/api/elastic',{
-	    		headers: {"Content-Type": "application/json"},
-	    		method: "POST",
-	    		body: JSON.stringify({
-				"cmd":"diseases/_search",
-				"q": query
-				}
-		 	)
-	        })
-      		 .then((res) => res.json())
-      		 .then((data) => { setDiffData(JSON.stringify(data)) })
 		}
 	}
 }
