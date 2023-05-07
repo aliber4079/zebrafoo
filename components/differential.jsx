@@ -3,6 +3,7 @@ import styles from './differential.module.css'
 
 export default function Differential({title, symptomsHolder}) {
 	const [diffData,setDiffData] = useState([])
+	const [diffStatus,setDiffStatus] = useState("")
 	useEffect(() => {
 		 let subqueries={}
 		 let classifications=["filter","must_not","should"]
@@ -27,6 +28,7 @@ export default function Differential({title, symptomsHolder}) {
 		 }}
 
 		 console.log(JSON.stringify(query))
+		 setDiffStatus("computing differential")
 		 fetch('/api/elastic',{
 	    		headers: {"Content-Type": "application/json"},
 	    		method: "POST",
@@ -37,7 +39,15 @@ export default function Differential({title, symptomsHolder}) {
 		 	)
 	        })
       		 .then((res) => res.json())
-      		 .then((data) => { setDiffData(data) })
+      		 .then((data) => { 
+			 setDiffData(data) 
+			 if (!data.hits) {
+				 setDiffStatus("no results")
+			 } else {
+				 setDiffStatus(data.hits.hits.length + " result(s)")
+			 }
+
+		 })
 	},[symptomsHolder])
 	let diffMarkup=null
 	if (!diffData.hits) {
@@ -47,7 +57,7 @@ export default function Differential({title, symptomsHolder}) {
 	}
 	return (<>
 		 <div style={{"float":"left"}}>
-		  <div>{title}</div>
+		  <div>{title} {diffStatus}</div>
 		 <div id="differential" className={styles.differential} >
 		 <ul>
 		  {diffMarkup}
