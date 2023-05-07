@@ -1,6 +1,8 @@
 {
     "scripts": {
-        "dev": "next dev"
+        "dev": "next dev",
+	"build": "next build",
+    	"start": "next start -p 3001"
     },
     "dependencies": {
         "mysql": "^2.18.1",

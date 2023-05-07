@@ -13,7 +13,7 @@ export default function Differential({title, symptomsHolder}) {
 		  if (holderclone.filter(x=>x.container=="symptoms_"+qual).length==0) {
 			  continue
 		  }
-		  subqueries[qual]=holderclone.filter(k=>k.container=="symptoms_"+qual).map(y=>y.id.replace("_",":")).map(x=>{return {"match":{
+		  subqueries[qual]=holderclone.filter(k=>k.container=="symptoms_"+qual).map(y=>y.id.substring(y.id.indexOf("_")+1)).map(x=>{return {"match":{
 			  [keyon]: x
 		  }
 		  }});
