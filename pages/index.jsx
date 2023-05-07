@@ -38,10 +38,10 @@ export default function HomePage() {
 			searched_words=searched_words.map(i=>{
 				return{...i, ...{"container":"proposed"} }
 			})
-			let searched_words_filtered=searched_words.filter(i=>!symptomsHolder.find(j=>i.id==j.id))
-			setQueryStatus(searched_words_filtered.length + " result(s)")
 			//clear out old proposed symptoms
 			let tmpHolder=(symptomsHolder.filter(i=>i.container!=="proposed"))
+			let searched_words_filtered=searched_words.filter(i=>!tmpHolder.find(j=>i.id==j.id))
+			setQueryStatus(searched_words_filtered.length + " result(s)")
 			tmpHolder=[...searched_words_filtered,...tmpHolder]
 			setSymptomsHolder(tmpHolder)
 
@@ -53,7 +53,7 @@ export default function HomePage() {
 	    	<SymptomsHolder title="results of symptom search" id="proposed" dragDrop={dragDrop} symptomsHolder={symptomsHolder} setSymptomsHolder={setSymptomsHolder} />
 	    	<SymptomsHolder title="symptoms must not match" id="symptoms_must_not" dragDrop={dragDrop} symptomsHolder={symptomsHolder} setSymptomsHolder={setSymptomsHolder} />
 	    	<SymptomsHolder title="symptoms should match" id="symptoms_should" dragDrop={dragDrop} symptomsHolder={symptomsHolder} setSymptomsHolder={setSymptomsHolder} />
-	    	<SymptomsHolder title="symptoms must match" id="symptoms_must" dragDrop={dragDrop} symptomsHolder={symptomsHolder} setSymptomsHolder={setSymptomsHolder} />
+	    	<SymptomsHolder title="symptoms must match" id="symptoms_filter" dragDrop={dragDrop} symptomsHolder={symptomsHolder} setSymptomsHolder={setSymptomsHolder} />
 		<Differential title="differential" symptomsHolder={symptomsHolder} />
 		</>
 	)

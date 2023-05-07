@@ -5,7 +5,7 @@ export default function Differential({title, symptomsHolder}) {
 	const [diffData,setDiffData] = useState([])
 	useEffect(() => {
 		 let subqueries={}
-		 let classifications=["must","must_not","should"]
+		 let classifications=["filter","must_not","should"]
 		let keyon="HPODisorderSetStatus.Disorder.HPODisorderAssociationList.HPODisorderAssociation.HPO.HPOId"
 		 for (let i in classifications) {
 		  let qual=classifications[i]
@@ -26,8 +26,7 @@ export default function Differential({title, symptomsHolder}) {
 			 "bool": subqueries
 		 }}
 
-		console.log(JSON.stringify(query))
-		 console.log("query: ", JSON.stringify(query))
+		 console.log(JSON.stringify(query))
 		 fetch('/api/elastic',{
 	    		headers: {"Content-Type": "application/json"},
 	    		method: "POST",
@@ -38,14 +37,21 @@ export default function Differential({title, symptomsHolder}) {
 		 	)
 	        })
       		 .then((res) => res.json())
-      		 .then((data) => { setDiffData(JSON.stringify(data)) })
+      		 .then((data) => { setDiffData(data) })
 	},[symptomsHolder])
-	if (!diffData) return
+	let diffMarkup=null
+	if (!diffData.hits) {
+	diffMarkup=<li/>
+	} else {
+	diffMarkup=diffData.hits.hits.map(x=><li>{x._source.HPODisorderSetStatus[0][4].Disorder[0][3].Name}</li>)
+	}
 	return (<>
 		 <div style={{"float":"left"}}>
 		  <div>{title}</div>
 		 <div id="differential" className={styles.differential} >
-		  {diffData}
+		 <ul>
+		  {diffMarkup}
+		 </ul>
 		</div>
 		</div>
 		</>
