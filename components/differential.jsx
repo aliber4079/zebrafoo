@@ -43,7 +43,7 @@ export default function Differential({title, symptomsHolder}) {
 	if (!diffData.hits) {
 	diffMarkup=<li/>
 	} else {
-	diffMarkup=diffData.hits.hits.map(x=><li>{x._source.HPODisorderSetStatus[0][4].Disorder[0][3].Name}</li>)
+	diffMarkup=diffData.hits.hits.map(x=><li>{x._source.HPODisorderSetStatus[0][4].Disorder[0][3].Name} <a target="_blank" className={styles.external} href={x._source.HPODisorderSetStatus[0][4].Disorder[0][4].ExpertLink}/></li>)
 	}
 	return (<>
 		 <div style={{"float":"left"}}>
