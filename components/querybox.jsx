@@ -28,7 +28,11 @@ export default function QueryBox({beginSearch, queryStatus}) {
 	}
 	return (
 		<>
+		<label >
+		<p style={{marginTop: "2em"}} />
+		Enter symptoms one at a time, drag best matches to the appropriate box <p/>
 		<input id="queryinput" type="text" onKeyPress={timerstuff} />
+		</label>
 		<p>status: {queryStatus}</p>
 		</>
 	)

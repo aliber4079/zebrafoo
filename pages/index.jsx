@@ -15,16 +15,19 @@ export default function HomePage() {
 	    		headers: {"Content-Type": "application/json"},
 	    		method: "POST",
 	    		body: JSON.stringify({
-				"cmd":"_search",
+				"cmd":"symptoms/_search",
 				"q": {
-					"query": {
-						"combined_fields": {
-							"query":searchText,
-							"fields":["lbl","synonyms"],
-							"operator":"and"
-						}
+				 "query": {
+					"multi_match": {
+					"query": searchText,
+					"type": "bool_prefix",
+					"fields": [
+						"lbl",
+						"synonyms"
+				      	 ]
 					}
 				}
+			  }
 	    		})
       		 })
       		 .then((res) => res.json())
