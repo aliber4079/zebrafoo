@@ -53,8 +53,8 @@ export default function HomePage() {
 	return(
 		<>
 		<div style={{textAlign:"center"}}>
-		<h1><a href="https://github.com/aliber4079/zebrafoo">Zebrafoo on github</a></h1>
-		A search utility using data from <a href="https://www.orpha.net/consor/cgi-bin/Disease.php?lng=EN">Orpha.net</a>
+		<h2><a href="https://github.com/aliber4079/zebrafoo">Zebrafoo on github</a></h2>
+		A rare disease search utility using data from <a href="https://www.orpha.net/consor/cgi-bin/Disease.php?lng=EN">Orpha.net</a>
 		</div>
 		<QueryBox beginSearch={beginSearch} queryStatus={queryStatus}/>
 	    	<SymptomsHolder title="results of symptom search" id="proposed" dragDrop={dragDrop} symptomsHolder={symptomsHolder} setSymptomsHolder={setSymptomsHolder} />

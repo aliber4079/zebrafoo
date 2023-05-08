@@ -29,7 +29,7 @@ export default function QueryBox({beginSearch, queryStatus}) {
 	return (
 		<>
 		<label >
-		<p style={{marginTop: "2em"}} />
+		<p>Click <a target="_blank" href="https://www.zebrafoo.com/zebra/exampleusage.html">here</a> to see a 15 second video showing a sample search</p>
 		Enter symptoms one at a time, drag best matches to the appropriate box <p/>
 		<input id="queryinput" type="text" onKeyPress={timerstuff} />
 		</label>
