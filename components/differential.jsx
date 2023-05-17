@@ -7,21 +7,36 @@ export default function Differential({title, symptomsHolder}) {
 	useEffect(() => {
 		 let subqueries={}
 		 let classifications=["filter","must_not","should"]
-		let keyon="HPODisorderSetStatus.Disorder.HPODisorderAssociationList.HPODisorderAssociation.HPO.HPOId"
+		let keyon="Disorder.HPODisorderAssociationList.HPODisorderAssociation.HPO.HPOId"
 		 for (let i in classifications) {
 		  let qual=classifications[i]
 		  let holderclone=symptomsHolder.map(x=>x)
 		  if (holderclone.filter(x=>x.container=="symptoms_"+qual).length==0) {
 			  continue
 		  }
-		  subqueries[qual]=holderclone.filter(k=>k.container=="symptoms_"+qual).map(y=>y.id.substring(y.id.indexOf("_")+1)).map(x=>{return {"match":{
-			  [keyon]: x
+		  subqueries[qual]=holderclone.filter(k=>k.container=="symptoms_"+qual).map(x=>{return {"match":{
+			  [keyon]: x.id
 		  }
 		  }});
 		 }
 		 if(Object.keys(subqueries).length==0) {
 			 setDiffData([])
 			 return
+		 }
+		  let holderclone=symptomsHolder.map(x=>x)
+		  let check_for_excluded=holderclone.filter(x=>{
+				 return (x.container!=="proposed")
+		 }).map(x=>{ return {"match":{
+			"Disorder.freq_agg.28440": x.id
+		 }
+		 }})
+		 
+		 if (subqueries["must_not"]==null) {
+		   subqueries["must_not"]=check_for_excluded
+		 } else {
+		   for(let i=0;i<check_for_excluded.length;i++) {
+		    subqueries["must_not"].push(check_for_excluded[i])
+		   }
 		 }
 		 let query={"query": {
 			 "bool": subqueries
@@ -53,7 +68,7 @@ export default function Differential({title, symptomsHolder}) {
 	if (!diffData.hits) {
 	diffMarkup=<li/>
 	} else {
-	diffMarkup=diffData.hits.hits.map(x=><li>{x._source.HPODisorderSetStatus[0][4].Disorder[0][3].Name} <a target="_blank" className={styles.external} href={x._source.HPODisorderSetStatus[0][4].Disorder[0][4].ExpertLink}/></li>)
+	diffMarkup=diffData.hits.hits.map(x=><li>{x._source.Disorder.Name} <a target="_blank" className={styles.external} href={x._source.Disorder.ExpertLink}/></li>)
 	}
 	return (<>
 		 <div style={{"float":"left"}}>
