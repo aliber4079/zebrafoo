@@ -15,7 +15,7 @@ export default function Differential({title, symptomsHolder}) {
 			  continue
 		  }
 		  subqueries[qual]=holderclone.filter(k=>k.container=="symptoms_"+qual).map(x=>{return {"match":{
-			  [keyon]: x.id
+			  [keyon]: x.id.replace("HP_","HP:")
 		  }
 		  }});
 		 }
@@ -27,7 +27,7 @@ export default function Differential({title, symptomsHolder}) {
 		  let check_for_excluded=holderclone.filter(x=>{
 				 return (x.container!=="proposed")
 		 }).map(x=>{ return {"match":{
-			"Disorder.freq_agg.28440": x.id
+			"Disorder.freq_agg.28440": x.id.replace("HP_","HP:")
 		 }
 		 }})
 		 
